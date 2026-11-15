@@ -1,0 +1,728 @@
+<!-- CONFIG BLOCK — change this to rebrand for any deployment -->
+<script>
+const CONFIG = {
+  brandName: "FALLEN ANGEL MD",
+  bannerImageUrl: "https://i.postimg.cc/hthSMsj0/b5b95eee66494488d8b5204e1abb1ab0.jpg",
+  ownerNumber: "263714373922",
+  ownerName: "FALLEN",
+  channelLink: "https://whatsapp.com/channel/0029VbDhulGBFLgNCJwsbH43",
+  backendUrl: "https://web-production-4abfe.up.railway.app"
+};
+</script>
+<!-- END CONFIG BLOCK -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title id="page-title">Bot Pairing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:       #070708;
+    --panel:    #0f0f16;
+    --panel2:   #16161f;
+    --accent:   #7C3AED;
+    --accent2:  #9d5ff5;
+    --glow:     rgba(124,58,237,0.18);
+    --text:     #F0EFF6;
+    --muted:    #7a7988;
+    --dim:      #3a3948;
+    --success:  #22c55e;
+    --danger:   #ef4444;
+    --warn:     #f59e0b;
+    --radius:   12px;
+    --font-h:   'Space Grotesk', system-ui, sans-serif;
+    --font-b:   'Inter', system-ui, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-b);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg);
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── LAYOUT ── */
+  .page {
+    min-height: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px 48px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 28px 0 20px;
+    text-align: center;
+  }
+  .banner-wrap {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto 20px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--dim);
+    background: var(--panel);
+    aspect-ratio: 16/7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .banner-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .brand-name {
+    font-family: var(--font-h);
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .brand-name span {
+    color: var(--accent2);
+  }
+  .owner-row {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--font-b);
+  }
+  .owner-row strong { color: var(--text); font-weight: 500; }
+
+  /* ── STATUS PILL ── */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    background: var(--panel2);
+    border: 1px solid var(--dim);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: var(--font-h);
+    font-weight: 500;
+    color: var(--muted);
+    transition: color .3s, border-color .3s;
+  }
+  .status-pill.online { color: var(--success); border-color: rgba(34,197,94,.3); }
+  .status-pill.offline { color: var(--danger); border-color: rgba(239,68,68,.3); }
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .status-pill.online .dot { animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: .35; }
+  }
+
+  /* ── CHANNEL BUTTON ── */
+  .channel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 300px;
+    margin: 18px auto 0;
+    padding: 11px 20px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 100px;
+    color: var(--accent2);
+    font-family: var(--font-h);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .channel-btn:hover { background: var(--glow); text-decoration: none; }
+  .channel-btn svg { flex-shrink: 0; }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 24px 0;
+  }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--dim);
+    border-radius: var(--radius);
+    padding: 16px 14px;
+    border-left: 3px solid var(--accent);
+  }
+  .stat-val {
+    font-family: var(--font-h);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-label {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  /* ── PAIR SECTION ── */
+  .section-label {
+    font-family: var(--font-h);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .pair-card {
+    background: var(--panel);
+    border: 1px solid var(--dim);
+    border-radius: var(--radius);
+    padding: 22px 18px;
+  }
+  .pair-card h2 {
+    font-family: var(--font-h);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .pair-card p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .cc-input {
+    width: 72px;
+    flex-shrink: 0;
+    background: var(--panel2);
+    border: 1px solid var(--dim);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-b);
+    font-size: 15px;
+    padding: 12px 10px;
+    text-align: center;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .cc-input:focus { border-color: var(--accent); }
+  .number-input {
+    flex: 1;
+    background: var(--panel2);
+    border: 1px solid var(--dim);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font-b);
+    font-size: 15px;
+    padding: 12px 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .number-input:focus { border-color: var(--accent); }
+  .number-input::placeholder { color: var(--muted); }
+  .cc-label {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: .04em;
+  }
+  .pair-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: var(--font-h);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, opacity .2s;
+    letter-spacing: .02em;
+  }
+  .pair-btn:hover:not(:disabled) { background: var(--accent2); }
+  .pair-btn:disabled { opacity: .55; cursor: not-allowed; }
+  .inline-error {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--danger);
+    min-height: 18px;
+  }
+
+  /* ── CODE DISPLAY ── */
+  .code-block {
+    display: none;
+    margin-top: 22px;
+    background: var(--panel2);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 22px 18px;
+    text-align: center;
+    animation: fadeIn .3s ease;
+  }
+  .code-block.visible { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: none; } }
+  .code-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .code-display {
+    font-family: var(--font-h);
+    font-size: clamp(28px, 9vw, 40px);
+    font-weight: 700;
+    color: var(--accent2);
+    letter-spacing: .12em;
+    line-height: 1;
+  }
+  .code-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .copy-btn {
+    background: var(--panel);
+    border: 1px solid var(--dim);
+    border-radius: 6px;
+    color: var(--muted);
+    padding: 7px 12px;
+    font-size: 12px;
+    font-family: var(--font-h);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+  .timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .timer-val { color: var(--warn); font-weight: 600; font-family: var(--font-h); }
+  .timer-bar-wrap {
+    margin-top: 12px;
+    height: 3px;
+    background: var(--dim);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .timer-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 100px;
+    transition: width .9s linear;
+  }
+
+  /* ── STEPS ── */
+  .steps-card {
+    background: var(--panel);
+    border: 1px solid var(--dim);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    margin-top: 20px;
+  }
+  .steps-card h3 {
+    font-family: var(--font-h);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .step:last-child { margin-bottom: 0; }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--glow);
+    border: 1px solid var(--accent);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-h);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .step-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-top: 2px;
+  }
+  .step-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── TOAST ── */
+  .toast-wrap {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    width: calc(100% - 32px);
+    max-width: 420px;
+  }
+  .toast {
+    background: var(--panel2);
+    border: 1px solid var(--dim);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    pointer-events: auto;
+    max-width: 100%;
+    text-align: center;
+    animation: slideUp .25s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  }
+  .toast.success { border-color: rgba(34,197,94,.4); color: var(--success); }
+  .toast.error   { border-color: rgba(239,68,68,.4); color: var(--danger); }
+  @keyframes slideUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+  .footer span { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="page">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="banner-wrap">
+      <img id="bannerImg" src="" alt="Brand Banner" loading="lazy"/>
+    </div>
+    <div class="brand-name" id="brandName">—</div>
+    <div class="owner-row">Owner <strong id="ownerName">—</strong></div>
+    <div>
+      <span class="status-pill" id="statusPill">
+        <span class="dot"></span>
+        <span id="statusText">Checking…</span>
+      </span>
+    </div>
+    <a class="channel-btn" id="channelLink" href="#" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Join Channel
+    </a>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-val" id="statUsers">—</div>
+      <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="statSessions">—</div>
+      <div class="stat-label">Active Sessions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="statPaired">—</div>
+      <div class="stat-label">Total Paired</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="statNew">—</div>
+      <div class="stat-label">New Today</div>
+    </div>
+  </div>
+
+  <!-- PAIR CARD -->
+  <div class="section-label">Pair Your Device</div>
+  <div class="pair-card">
+    <h2>Get Pairing Code</h2>
+    <p>Enter your WhatsApp number to link your bot session.</p>
+    <label class="cc-label" for="ccInput">Country Code</label>
+    <div class="input-row">
+      <input class="cc-input" id="ccInput" type="tel" value="92" maxlength="4" inputmode="numeric"/>
+      <input class="number-input" id="numInput" type="tel" placeholder="7001234567" inputmode="numeric"/>
+    </div>
+    <button class="pair-btn" id="pairBtn">Get Pairing Code</button>
+    <div class="inline-error" id="inlineErr"></div>
+
+    <!-- CODE DISPLAY -->
+    <div class="code-block" id="codeBlock">
+      <div class="code-label">Your Pairing Code</div>
+      <div class="code-row">
+        <div class="code-display" id="codeDisplay">--------</div>
+        <button class="copy-btn" id="copyBtn">Copy</button>
+      </div>
+      <div class="timer-row">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Expires in <span class="timer-val" id="timerVal">—</span>
+      </div>
+      <div class="timer-bar-wrap">
+        <div class="timer-bar" id="timerBar" style="width:100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-card">
+    <h3>How to pair</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">Enter your number above and tap <strong>Get Pairing Code</strong>.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Open WhatsApp → <strong>Settings → Linked Devices → Link a Device</strong>.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">Choose <strong>"Link with phone number instead"</strong> and enter the 8-digit code.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">Done — your bot is live. The code expires in <strong>2 minutes</strong>.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div id="footerBrand">—</div>
+    <div>Powered by Baileys · MD Bot Framework</div>
+  </footer>
+</div>
+
+<script>
+(function() {
+  /* ── apply config ── */
+  document.getElementById('page-title').textContent   = CONFIG.brandName;
+  document.getElementById('brandName').innerHTML      = CONFIG.brandName.replace(/(MD|BOT|ANGEL)/gi, s => `<span>${s}</span>`);
+  document.getElementById('bannerImg').src            = CONFIG.bannerImageUrl;
+  document.getElementById('ownerName').textContent    = CONFIG.ownerName;
+  document.getElementById('channelLink').href         = CONFIG.channelLink;
+  document.getElementById('footerBrand').textContent  = CONFIG.brandName;
+
+  /* ── toast ── */
+  function toast(msg, type) {
+    const wrap = document.getElementById('toastWrap');
+    const t = document.createElement('div');
+    t.className = 'toast' + (type ? ' '+type : '');
+    t.textContent = msg;
+    wrap.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3200);
+  }
+
+  /* ── health ── */
+  function checkHealth() {
+    fetch(CONFIG.backendUrl + '/api/health')
+      .then(r => r.json())
+      .then(d => {
+        const pill = document.getElementById('statusPill');
+        const txt  = document.getElementById('statusText');
+        if (d.status === 'ok') {
+          pill.className = 'status-pill online';
+          txt.textContent = 'Online';
+        } else throw 0;
+      })
+      .catch(() => {
+        const pill = document.getElementById('statusPill');
+        const txt  = document.getElementById('statusText');
+        pill.className = 'status-pill offline';
+        txt.textContent = 'Offline';
+      });
+  }
+
+  /* ── stats ── */
+  let lastStats = null;
+  function fetchStats() {
+    fetch(CONFIG.backendUrl + '/api/stats')
+      .then(r => r.json())
+      .then(d => {
+        if (!d.ok) return;
+        lastStats = d;
+        document.getElementById('statUsers').textContent    = d.totalUsers   ?? '—';
+        document.getElementById('statSessions').textContent = d.activeSessions ?? '—';
+        document.getElementById('statPaired').textContent   = d.totalPaired  ?? '—';
+        document.getElementById('statNew').textContent      = d.dailyNew     ?? '—';
+      })
+      .catch(() => {/* keep last shown */});
+  }
+
+  checkHealth();
+  fetchStats();
+  setInterval(fetchStats, 30000);
+
+  /* ── countdown ── */
+  let countdownHandle = null;
+  let codeExpiry      = 0;
+  let codeDuration    = 120;
+
+  function startCountdown(seconds) {
+    clearInterval(countdownHandle);
+    codeDuration = seconds;
+    codeExpiry   = Date.now() + seconds * 1000;
+
+    function tick() {
+      const rem = Math.max(0, Math.round((codeExpiry - Date.now()) / 1000));
+      const m = Math.floor(rem / 60);
+      const s = rem % 60;
+      document.getElementById('timerVal').textContent = m + ':' + String(s).padStart(2,'0');
+      const pct = (rem / codeDuration) * 100;
+      document.getElementById('timerBar').style.width = pct + '%';
+      if (rem <= 0) {
+        clearInterval(countdownHandle);
+        document.getElementById('codeBlock').classList.remove('visible');
+        document.getElementById('pairBtn').disabled = false;
+        document.getElementById('pairBtn').textContent = 'Get Pairing Code';
+        toast('Code expired — request a new one.', 'error');
+      }
+    }
+    tick();
+    countdownHandle = setInterval(tick, 1000);
+  }
+
+  /* ── pairing ── */
+  document.getElementById('pairBtn').addEventListener('click', async function() {
+    const err  = document.getElementById('inlineErr');
+    err.textContent = '';
+
+    const cc  = document.getElementById('ccInput').value.replace(/\D/g,'');
+    const num = document.getElementById('numInput').value.replace(/\D/g,'');
+    const full = cc + num;
+
+    if (!/^\d{10,15}$/.test(full)) {
+      err.textContent = 'Enter a valid number (10–15 digits with country code).';
+      return;
+    }
+
+    this.disabled    = true;
+    this.textContent = 'Generating…';
+
+    try {
+      const res = await fetch(CONFIG.backendUrl + '/api/pair', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          number: full,
+          brand: {
+            name:      CONFIG.brandName,
+            banner:    CONFIG.bannerImageUrl,
+            owner:     CONFIG.ownerNumber,
+            ownerName: CONFIG.ownerName,
+            channel:   CONFIG.channelLink
+          }
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const msg = data.error || 'Something went wrong. Try again.';
+        err.textContent = msg;
+        this.disabled    = false;
+        this.textContent = 'Get Pairing Code';
+        return;
+      }
+
+      /* success */
+      const raw   = data.code || '';
+      const clean = raw.replace(/[^A-Z0-9]/gi,'').toUpperCase();
+      const fmt   = clean.length >= 8
+        ? clean.slice(0,4) + '-' + clean.slice(4,8)
+        : clean;
+
+      document.getElementById('codeDisplay').textContent = fmt;
+      document.getElementById('codeBlock').classList.add('visible');
+      this.textContent = 'Get Pairing Code';
+
+      const exp = typeof data.expiresIn === 'number' ? data.expiresIn : 120;
+      startCountdown(exp);
+
+    } catch (e) {
+      err.textContent = 'Could not reach server, please try again.';
+      this.disabled    = false;
+      this.textContent = 'Get Pairing Code';
+    }
+  });
+
+  /* ── copy button ── */
+  document.getElementById('copyBtn').addEventListener('click', function() {
+    const raw = document.getElementById('codeDisplay').textContent.replace('-','');
+    navigator.clipboard.writeText(raw).then(() => {
+      this.textContent = 'Copied!';
+      setTimeout(() => this.textContent = 'Copy', 1600);
+    }).catch(() => toast('Copy failed — do it manually.', 'error'));
+  });
+
+  /* ── numeric only inputs ── */
+  ['ccInput','numInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
